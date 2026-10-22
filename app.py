@@ -67,10 +67,12 @@ if emails:
         )
         filtered = filtered[search_mask]
 
+    
     display_df = filtered[
-        ["date", "status", "subject", "sender", "snippet"]
+        ["company", "date", "status", "subject", "sender", "snippet"]
     ].rename(
         columns={
+            "company": "Company",
             "date": "Date",
             "status": "Status",
             "subject": "Subject",
@@ -78,6 +80,7 @@ if emails:
             "snippet": "Preview",
         }
     )
+
 
     st.dataframe(
         display_df,
