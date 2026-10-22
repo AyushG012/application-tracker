@@ -1,0 +1,10 @@
+credentials.json
+token.json
+client_secret*.json
+.env
+.streamlit/secrets.toml
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
