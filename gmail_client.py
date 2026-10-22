@@ -19,6 +19,16 @@ GMAIL_QUERY = (
     "recruiter recruitment hiring offer}"
 )
 
+EXCLUDED_SENDERS = [
+    "tutorchase",
+    "prosple",
+]
+
+
+def is_excluded_email(sender: str, subject: str = "") -> bool:
+    text = f"{sender} {subject}".lower()
+    return any(term in text for term in EXCLUDED_SENDERS)
+
 
 def get_gmail_service():
     """Authenticate and return a Gmail API service."""
@@ -86,7 +96,12 @@ def scan_emails(max_results=100):
         }
 
         subject = headers.get("subject", "(No subject)")
+        sender = headers.get("from", "Unknown sender")
         snippet = details.get("snippet", "")
+
+        if is_excluded_email(sender, subject):
+            continue
+
         category = classify_email(subject, snippet)
 
         if category:
