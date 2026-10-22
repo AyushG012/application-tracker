@@ -88,10 +88,28 @@ if emails:
     st.subheader("Open an email")
     for email in filtered.to_dict("records"):
         with st.expander(f'{email["status"]}: {email["subject"]}'):
+            
             st.write(f'**From:** {email["sender"]}')
             st.write(f'**Date:** {email["date"]}')
+
+            if email.get("company"):
+                st.write(f'**Company:** {email["company"]}')
+
+            if email.get("role"):
+                st.write(f'**Role:** {email["role"]}')
+
+            if email.get("confidence") is not None:
+                st.write(
+                    f'**Classification confidence:** '
+                    f'{email["confidence"]:.0%}'
+                )
+
+            if email.get("reason"):
+                st.write(f'**Reason:** {email["reason"]}')
+
             st.write(email["snippet"])
             st.link_button("Open in Gmail", email["link"])
+
 
 else:
     st.info("Click **Scan Gmail** to find internship application updates.")

@@ -6,7 +6,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-from classifier import classify_email
+from llm_classifier import classify_email_hybrid
 
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -102,20 +102,26 @@ def scan_emails(max_results=100):
         if is_excluded_email(sender, subject):
             continue
 
-        category = classify_email(subject, snippet)
+        
+        classification = classify_email_hybrid(subject, snippet)
 
-        if category:
+        if classification["status"] != "NotRelevant":
             results.append({
                 "id": message["id"],
                 "subject": subject,
                 "sender": headers.get("from", "Unknown sender"),
                 "date": headers.get("date", ""),
                 "snippet": snippet,
-                "status": category,
+                "status": classification["status"],
+                "company": classification["company"],
+                "role": classification["role"],
+                "confidence": classification["confidence"],
+                "reason": classification["reason"],
                 "link": (
                     "https://mail.google.com/mail/u/0/#all/"
                     + message["id"]
                 ),
             })
+
 
     return results
